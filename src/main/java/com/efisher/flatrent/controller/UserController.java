@@ -7,8 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
@@ -22,9 +23,12 @@ public class UserController {
     public ResponseEntity<User> registerNewUserAccount(@RequestBody UserDTO userDTO) {
 
         LOGGER.debug("Performing new user registration with info {}", userDTO);
-
-        final User user = userService.registerNewUserAccount(userDTO);
-        //todo: implement registration process
+        User user = null;
+        try {
+            user = userService.registerNewUserAccount(userDTO);
+        } catch (RuntimeException e) {
+            LOGGER.error(e.toString());
+        }
         return ResponseEntity.ok(user);
     }
 }

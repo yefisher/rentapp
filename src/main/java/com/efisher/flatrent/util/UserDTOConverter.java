@@ -16,4 +16,14 @@ public final class UserDTOConverter {
                 .userComments(userDTO.getComments())
                 .build();
     }
+
+    public static User fromUserDtoToUserToRegister(UserDTO userDTO) {
+        return User.builder()
+                .username(userDTO.getUsername())
+                .email(userDTO.getEmail())
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .build();
+
+    }
 }

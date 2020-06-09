@@ -1,15 +1,13 @@
 package com.efisher.flatrent.service;
 
 import com.efisher.flatrent.domain.User;
-import com.efisher.flatrent.domain.UserRole;
 import com.efisher.flatrent.dto.UserDTO;
 import com.efisher.flatrent.error.UserAlreadyExistsException;
 import com.efisher.flatrent.repository.UserRepository;
+import com.efisher.flatrent.util.UserDTOConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 @Service
 public class UserService {
@@ -25,13 +23,8 @@ public class UserService {
             throw new UserAlreadyExistsException("There is an account with given email address: " + userDto.getEmail());
         }
 
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setEmail(userDto.getEmail());
+        User user = UserDTOConverter.fromUserDtoToUserToRegister(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRoles(Arrays.asList(new UserRole("USER")));
-        user.setFirstName(userDto.getFirstName());
-        user.setLastName(userDto.getLastName());
 
         return userRepository.save(user);
     }

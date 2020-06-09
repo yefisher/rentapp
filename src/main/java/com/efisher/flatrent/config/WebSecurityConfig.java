@@ -26,8 +26,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/resources/**", "/webapp/**");
     }
 
-
-    //todo: configure security module
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -50,7 +48,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/logout?logoutSucc=true")
                 .deleteCookies("JSESSIONID")
                 .permitAll();
-
     }
 
 

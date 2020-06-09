@@ -18,6 +18,6 @@ public class WebMvcConfig implements WebServerFactoryCustomizer<ConfigurableServ
 
     @Override
     public void customize(ConfigurableServletWebServerFactory factory) {
-        factory.setContextPath("/api/flat-rent-app");
+        factory.setContextPath("/api");
     }
 }

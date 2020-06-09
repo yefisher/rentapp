@@ -1,18 +1,18 @@
 package com.efisher.flatrent.dto;
 
 import com.efisher.flatrent.domain.UserComment;
+import com.efisher.flatrent.domain.UserRole;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.lang.NonNull;
 
-import javax.management.relation.Role;
 import java.util.List;
 
 @Getter
 @Setter
 @Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
     private String id;
     @NonNull
@@ -26,6 +26,6 @@ public class UserDTO {
     private String firstName;
     @NonNull
     private String lastName;
-    private List<Role> roles;
+    private List<UserRole> roles;
     private List<UserComment> comments;
 }

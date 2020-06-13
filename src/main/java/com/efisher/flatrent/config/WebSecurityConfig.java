@@ -18,9 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserRepository userRepository;
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/resources/**", "/webapp/**");
@@ -30,7 +27,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login*", "/logout*", "/api/flat-rent-app/user/register").permitAll()
+                .antMatchers("/login*", "/logout*", "/register").permitAll()
+                .and().authorizeRequests()
+                .antMatchers("/admin*").hasRole("ADMIN")
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -49,7 +48,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .deleteCookies("JSESSIONID")
                 .permitAll();
     }
-
 
     @Bean
     public SessionRegistry sessionRegistry() {

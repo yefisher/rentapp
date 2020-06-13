@@ -11,21 +11,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.Role;
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository repository;
 
-    private final HttpServletRequest request;
-
     @Autowired
-    public UserDetailsServiceImpl(final UserRepository repository, HttpServletRequest request) {
+    public UserDetailsServiceImpl(final UserRepository repository) {
         this.repository = repository;
-        this.request = request;
     }
 
     @Override
@@ -45,20 +42,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private List<GrantedAuthority> getGrantedAuthorities(final List<UserRole> roles) {
         final List<GrantedAuthority> authorities = new ArrayList<>();
 
-        for(UserRole role : roles)
+        for (UserRole role : roles)
             authorities.add(new SimpleGrantedAuthority(role.getRole()));
         return authorities;
-    }
-
-    /*
-    * This method will be used in further updates :)
-    * */
-
-    private String getClientIP() {
-        final String xfHeader = request.getHeader("X-Forwarded-For");
-        if (xfHeader == null) {
-            return request.getRemoteAddr();
-        }
-        return xfHeader.split(",")[0];
     }
 }

@@ -17,7 +17,17 @@ public final class UserDTOConverter {
                 .build();
     }
 
-    public static User fromUserDtoToUserToRegister(UserDTO userDTO) {
+    public static User fromUserDtoToUpdate(UserDTO userDTO) {
+        return User.builder()
+                .username(userDTO.getUsername())
+                .email(userDTO.getEmail())
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .roles(userDTO.getRoles())
+                .build();
+    }
+
+    public static User fromUserDtoToUserToSave(UserDTO userDTO) {
         return User.builder()
                 .username(userDTO.getUsername())
                 .email(userDTO.getEmail())

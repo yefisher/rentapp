@@ -11,5 +11,5 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 public class UserComment {
     private String comment;
-    private Apartments flat;
+    private Apartment flat;
 }

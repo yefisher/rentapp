@@ -1,18 +1,24 @@
 package com.efisher.flatrent.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 @Document(collection = "apartments")
 @Getter
 @Setter
+@Builder(toBuilder = true)
+@NoArgsConstructor
 @AllArgsConstructor
-public class Apartments {
+public class Apartment {
+    @Transient
+    public static final String SEQUENCE_ID = "apartment_id";
     @Id
-    private String flatId;
+    private String apartmentId;
+    private List<String> pictureUrlList;
     private String title;
     private Double price;
     private String description;

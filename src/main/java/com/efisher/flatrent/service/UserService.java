@@ -2,20 +2,20 @@ package com.efisher.flatrent.service;
 
 import com.efisher.flatrent.domain.User;
 import com.efisher.flatrent.dto.UserDTO;
+import com.efisher.flatrent.error.InfoUpdateException;
 import com.efisher.flatrent.error.UserAlreadyExistsException;
+import com.efisher.flatrent.error.UserNotFoundException;
 import com.efisher.flatrent.repository.UserRepository;
 import com.efisher.flatrent.util.UserDTOConverter;
-import com.mongodb.client.result.DeleteResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -39,7 +39,7 @@ public class UserService {
         this.sequenceGeneratorService = sequenceGeneratorService;
     }
 
-    public User registerNewUserAccount(final UserDTO userDto) {
+    public User saveUser(final UserDTO userDto) {
         LOGGER.info("Performing creating new record to database...");
 
         if (emailExists(userDto.getEmail())) {
@@ -50,22 +50,53 @@ public class UserService {
                     userDto.getUsername()));
         }
 
-        User user = UserDTOConverter.fromUserDtoToUserToRegister(userDto);
+        User user = UserDTOConverter.fromUserDtoToUserToSave(userDto);
         user.setId(sequenceGeneratorService.generateSequence(User.SEQUENCE_NAME));
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         return userRepository.save(user);
     }
 
+    public Optional<User> getUserById(final long id) throws UserNotFoundException {
+        LOGGER.info(String.format("Performing searching user with give id: %d", id));
+        Optional<User> userOptional = userRepository.findById(id);
+        if (!userOptional.isPresent())
+            throw new UserNotFoundException(String.format("User not found with given id: %d", id));
+
+        return userOptional;
+    }
+
+    public User updateUser(final UserDTO userDTO, final long id) throws UserNotFoundException, InfoUpdateException {
+        Optional<User> userOptional = userRepository.findById(Long.valueOf(id));
+        if (!userOptional.isPresent())
+            throw new UserNotFoundException(String.format("User not found with given id: %d", id));
+        if (usernameExists(userDTO.getUsername()))
+            throw new InfoUpdateException(String.format("Exception occurred: such username already taken: %s", userDTO.getUsername()));
+        User user = userOptional.get();
+        user.setUsername(userDTO.getUsername());
+
+        return mongoOperations.save(user);
+    }
+
     public List<User> getUserList() {
         return mongoOperations.findAll(User.class);
     }
 
-    private Boolean emailExists(String email) {
+    public User removeUser(final long id) {
+        Optional<User> userOptional = getUserById(id);
+        if (!userOptional.isPresent())
+            throw new UserNotFoundException(String.format("User not found with given id: %d", id));
+        User user = userOptional.get();
+        mongoOperations.remove(user);
+
+        return user;
+    }
+
+    private boolean emailExists(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    private Boolean usernameExists(String username) {
+    private boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
 }

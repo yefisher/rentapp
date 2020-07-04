@@ -26,21 +26,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value = "/save")
-    public ResponseEntity<User> saveUser(@RequestBody final UserDTO userDTO) {
-
-        LOGGER.info("Performing new user saving with info {} .", userDTO);
-        User user;
-        try {
-            user = userService.saveUser(userDTO);
-        } catch (RuntimeException e) {
-            LOGGER.error(e.toString());
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
-        LOGGER.info("New user {} has been saved.", userDTO);
-        return ResponseEntity.ok(user);
-    }
-
     @GetMapping
     public ResponseEntity<List<User>> getUserList() {
         LOGGER.info("Uploading user list...");

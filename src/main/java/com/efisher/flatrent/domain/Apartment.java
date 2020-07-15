@@ -17,7 +17,7 @@ public class Apartment {
     @Transient
     public static final String SEQUENCE_ID = "apartment_id";
     @Id
-    private String apartmentId;
+    private Long apartmentId;
     private List<String> pictureUrlList;
     private String title;
     private Double price;

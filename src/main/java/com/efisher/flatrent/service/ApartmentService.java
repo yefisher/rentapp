@@ -1,5 +1,6 @@
 package com.efisher.flatrent.service;
 
+import com.efisher.flatrent.domain.Apartment;
 import com.efisher.flatrent.repository.ApartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -19,6 +20,10 @@ public class ApartmentService {
         this.apartmentRepository = apartmentRepository;
         this.mongoOperations = mongoOperations;
         this.generatorService = generatorService;
+    }
+
+    public Apartment saveApartment() {
+        return new Apartment();
     }
 
     private boolean collectionExists(final String collectionName) {

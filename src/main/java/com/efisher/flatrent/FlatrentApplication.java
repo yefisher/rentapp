@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class FlatRentApplication {
+public class FlatrentApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FlatRentApplication.class, args);
+        SpringApplication.run(FlatrentApplication.class, args);
     }
 }
